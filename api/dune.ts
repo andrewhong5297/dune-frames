@@ -7,41 +7,38 @@ import fetch from 'node-fetch';
 
 const DUNE_API_KEY = process.env["DUNE_API_KEY"];
 
-export async function get_address_data(address: string) {
-    // try latest, and then refresh if latest doesn't work. TODO: add latest results endpoint to sdk
-    // eas dune query: https://dune.com/queries/3389839
-    let results = null
-    try{
-        const meta = {
-            "x-dune-api-key": DUNE_API_KEY || ""
-        };
-        const header = new Headers(meta);
-        const latest_response = await fetch(`https://api.dune.com/api/v1/query/3389839/results?params.cast_hash=${address}`, {
-            method: 'GET',
-            headers: header,
-        });
+export async function getRecommendations(fid: number) {
+    //schedule the query on a 6 hour interval, and then fetch by filtering for the user fid within the query results
+    //dune query: https://dune.com/queries/3509966
+    const meta = {
+        "x-dune-api-key": DUNE_API_KEY || ""
+    };
+    const header = new Headers(meta);
+    const latest_response = await fetch(`https://api.dune.com/api/v1/query/3509966/results?&filters=query_fid=${fid}`
+    , {
+        method: 'GET',
+        headers: header,
+    });
 
-        const body = await latest_response.text();
-        //if execution is stale, refresh it
-        const executionEndedAt = JSON.parse(body).execution_ended_at;
-        const minuteAgo = new Date(Date.now() - 3 * 60 * 1000).toISOString();
-        if (executionEndedAt < minuteAgo) {
-            throw new Error("Execution ended more than three minutes ago.");
-        } else {
-            results = JSON.parse(body)?.result?.rows[0].results;
-            if (results == null) {
-                throw new Error(body);
-            }
+    const body = await latest_response.text();
+    const recs = JSON.parse(body).result.rows[0]; //will only be one row in the result, for the filtered fid
+    delete recs.query_fid; //pop off the query_fid column that was used for filtering
+    // console.log(recs);
+
+    //return four random categories (keys) and users (values) from the recs result
+    const keys = Object.keys(recs);
+    const randomPairs = [];
+    const selectedKeys = new Set();
+    while (randomPairs.length < 4 && selectedKeys.size < keys.length) {
+        const randomKey = keys[Math.floor(Math.random() * keys.length)];
+        if (!selectedKeys.has(randomKey)) {
+            const randomValue = recs[randomKey][Math.floor(Math.random() * recs[randomKey].length)];
+            randomPairs.push({ key: randomKey, value: randomValue });
+            selectedKeys.add(randomKey);
         }
-    } catch (error) {
-        console.log(error)
-        const client = new DuneClient(DUNE_API_KEY ?? "");
-        const queryID = 3389839;
-        const parameters = [
-            QueryParameter.text("cast_hash", address)
-        ];
-
-        const response = await client.refresh(queryID, parameters)
-        results = response?.result?.rows[0].results
     }
+
+    console.log(randomPairs);
+    
+    return randomPairs
 }

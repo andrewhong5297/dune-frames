@@ -1,6 +1,8 @@
-import { Button, Frog, TextInput } from 'frog'
+import { Button, Frog } from 'frog'
 import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel'
+import { getRecommendations } from './dune'
+import duneLogo from './images/dune_logo.png';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -13,21 +15,32 @@ export const app = new Frog({
 
 /*
 App flow
-- 
+- See the top users from... (include a bunch of emojis of the different sections)
+  - click "following" or "followers"
+- show stats page
+  - show 4 random categories (2 onchain, 2 engagement), then a random 1 from the array
+  - button to show new ones
+  - button to see followers (or following)
+  - redirect button to the github repo
 */
 
-app.frame('/', (c) => {
-  const { buttonValue, inputText, status } = c
-  const fruit = inputText || buttonValue
+app.frame('/', async (c) => {
+  const { buttonValue, status, frameData, verified } = c
+  const option = buttonValue
+  let recs_list: { key: any; value: any; }[];
+  console.log("loading...", status, option)
+
+  if (status === 'response' && verified) {
+    console.log("running filter", option, frameData?.fid)
+    recs_list = await getRecommendations(16522);
+  }
+
   return c.res({
     image: (
       <div
         style={{
           alignItems: 'center',
-          background:
-            status === 'response'
-              ? 'linear-gradient(to right, #432889, #17101F)'
-              : 'black',
+          background: 'linear-gradient(to right, #432889, #17101F)',
           backgroundSize: '100% 100%',
           display: 'flex',
           flexDirection: 'column',
@@ -48,20 +61,37 @@ app.frame('/', (c) => {
             marginTop: 30,
             padding: '0 120px',
             whiteSpace: 'pre-wrap',
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
           {status === 'response'
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ''}`
-            : 'Welcome!'}
+            ? option 
+              ? 
+                recs_list.map((result) => (
+                  <div style={{ textAlign: 'right' }}>
+                    {`${result.key}: ${result.value}`}
+                  </div>))
+              : ''
+            : `See recomended users by persona\n\n 🤗⛓💻📈👟💎🥇👂📡`}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+            }}
+          >
+            <img src={duneLogo} alt="Dune Logo" />
+          </div>
         </div>
       </div>
     ),
     intents: [
-      <TextInput placeholder="Enter custom fruit..." />,
-      <Button value="apples">Apples</Button>,
-      <Button value="oranges">Oranges</Button>,
-      <Button value="bananas">Bananas</Button>,
-      status === 'response' && <Button.Reset>Reset</Button.Reset>,
+      status === 'initial'  && <Button value="followers">See From Your Followers</Button>,
+      status === 'response' && <Button value={option}>Show More</Button>,
+      status === 'response' && <Button.Link href="https://github.com/andrewhong5297/dune-frames">See Code</Button.Link>,
+      // (status === 'initial' || (status === 'response' && option === 'followers')) && <Button value="following">Following You</Button>,
+      // status === 'response' && <Button.Reset>Back</Button.Reset>,
     ],
   })
 })
