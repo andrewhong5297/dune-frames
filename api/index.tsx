@@ -8,20 +8,8 @@ dotenv.config();
 export const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
-  // Supply a Hub to enable frame verification.
   hub: neynar({ apiKey: process.env["NEYNAR_API"] || '' })
 })
-
-/*
-App flow
-- See the top users from... (include a bunch of emojis of the different sections)
-  - click "following" or "followers"
-- show stats page
-  - show 4 random categories (2 onchain, 2 engagement), then a random 1 from the array
-  - button to show new ones
-  - button to see followers (or following)
-  - redirect button to the github repo
-*/
 
 app.frame('/', async (c) => {
   const { buttonValue, status, frameData, verified } = c
