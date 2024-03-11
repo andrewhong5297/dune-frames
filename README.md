@@ -17,3 +17,5 @@ npm run dev
 ```
 
 Head to http://localhost:5173/api
+
+Have questions? [Reach out to me](https://warpcast.com/ilemi)
