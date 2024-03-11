@@ -1,11 +1,11 @@
 ## Dune Recommender Frame
 
-Given a user interaction with the frame, filter on results of a pre-run Dune query of all recommendations for just that user's fid. Then return the results in the frame randomly.
+Given a user interaction with the frame, filter on results of a pre-run Dune query of all recommendations for just that user's fid. Then return a random set of recommended users as results in the frame.
 
 Important Resources:
-- [Frame Query](https://dune.com/queries/3509966)
+- [Followers Recommendation Query](https://dune.com/queries/3509966)
 - [Farcaster User Stats Query](https://dune.com/queries/3418402)
-- [Dune API Docs](https://docs.dune.com/api-reference/executions/execution-object)
+- [Dune API Usage Docs](https://docs.dune.com/api-reference/executions/execution-object)
 
 ### Running Locally
 
