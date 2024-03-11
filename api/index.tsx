@@ -19,7 +19,7 @@ app.frame('/', async (c) => {
 
   if (status === 'response' && verified) {
     console.log("running filter", option, frameData?.fid)
-    recs_list = await getRecommendations(16522);
+    recs_list = await getRecommendations(frameData?.fid);
   }
 
   return c.res({
