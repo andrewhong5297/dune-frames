@@ -1,18 +1,20 @@
 import { Button, Frog, TextInput } from 'frog'
-// import { neynar } from 'frog/hubs'
+import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel'
-
-// Uncomment to use Edge Runtime.
-// export const config = {
-//   runtime: 'edge',
-// }
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const app = new Frog({
   assetsPath: '/',
   basePath: '/api',
   // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
+  hub: neynar({ apiKey: process.env["NEYNAR_API"] || '' })
 })
+
+/*
+App flow
+- 
+*/
 
 app.frame('/', (c) => {
   const { buttonValue, inputText, status } = c
