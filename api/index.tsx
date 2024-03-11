@@ -1,7 +1,7 @@
 import { Button, Frog } from 'frog'
 import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel'
-import { getRecommendations } from './dune'
+import { getRecommendations } from './dune.js'
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -81,7 +81,7 @@ app.frame('/', async (c) => {
     intents: [
       status === 'initial'  && <Button value="followers">See From Your Followers</Button>,
       status === 'response' && <Button value={option}>Show More</Button>,
-      status === 'response' && <Button.Link href="https://github.com/andrewhong5297/dune-frames">See Code</Button.Link>,
+      status === 'response' && <Button.Link href="https://github.com/andrewhong5297/dune-frames">See Frame Code</Button.Link>,
       // (status === 'initial' || (status === 'response' && option === 'followers')) && <Button value="following">Following You</Button>,
       // status === 'response' && <Button.Reset>Back</Button.Reset>,
     ],
