@@ -23,7 +23,7 @@ export async function getRecommendations(fid: number) {
     const body = await latest_response.text();
     const recs = JSON.parse(body).result.rows[0]; //will only be one row in the result, for the filtered fid
     delete recs.query_fid; //pop off the query_fid column that was used for filtering
-    // console.log(recs);
+    console.log(recs);
 
     //return four random categories (keys) and users (values) from the recs result
     const keys = Object.keys(recs);

@@ -2,7 +2,6 @@ import { Button, Frog } from 'frog'
 import { neynar } from 'frog/hubs'
 import { handle } from 'frog/vercel'
 import { getRecommendations } from './dune'
-import duneLogo from './images/dune_logo.png';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -40,7 +39,7 @@ app.frame('/', async (c) => {
       <div
         style={{
           alignItems: 'center',
-          background: 'linear-gradient(to right, #432889, #17101F)',
+          background: 'linear-gradient(to right, #E1E1F9, #FFECEB)',
           backgroundSize: '100% 100%',
           display: 'flex',
           flexDirection: 'column',
@@ -53,16 +52,17 @@ app.frame('/', async (c) => {
       >
         <div
           style={{
-            color: 'white',
-            fontSize: 60,
+            color: 'black',
+            fontSize: 50,
             fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
+            letterSpacing: '-0.020em',
+            lineHeight: 1.3,
             marginTop: 30,
             padding: '0 120px',
             whiteSpace: 'pre-wrap',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            fontWeight: 'bold'
           }}
         >
           {status === 'response'
@@ -74,16 +74,20 @@ app.frame('/', async (c) => {
                   </div>))
               : ''
             : `See recomended users by persona\n\n 🤗⛓💻📈👟💎🥇👂📡`}
-          <div
+        </div>
+        <div
             style={{
               position: 'absolute',
-              bottom: 0,
-              right: 0,
+              bottom: '10px',
+              right: '20px',
+              display: 'flex',
+              flexDirection: 'column',
+              width: '150px',
+              height: '80px',
             }}
           >
-            <img src={duneLogo} alt="Dune Logo" />
+            <img src="https://assets-global.website-files.com/62fca6954348cf2e3c918eee/64ff2a324de75d7cf9cab050_Dune%20logo.svg" alt="Dune Logo" />
           </div>
-        </div>
       </div>
     ),
     intents: [
