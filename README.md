@@ -20,4 +20,6 @@ npm run dev
 
 Head to http://localhost:5173/api
 
+If you run into issues with `node-gyp` then try running `yarn global add node-gyp && yarn install --frozen-lockfile` or `npm rebuild node-gyp` or `npm rebuild ffi-napi` to fix it.
+
 Have questions? [Reach out to me](https://warpcast.com/ilemi)
